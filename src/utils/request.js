@@ -6,11 +6,7 @@ import {Message} from 'element-ui'
 // 统一配置
 let rainbowAxios = axios.create({
     baseURL: 'http://127.0.0.1:8088/',
-    responseType: 'json',
-    validateStatus(status) {
-        // 200 外的状态码都认定为失败
-        return status === 200
-    }
+    responseType: 'json'
 })
 
 // 拦截请求
@@ -33,7 +29,6 @@ rainbowAxios.interceptors.response.use((config) => {
         switch (error.response.status) {
             case 404:
                Message.error({message: '很抱歉，资源未找到!'});
-
                 break
             case 403:
             case 401:

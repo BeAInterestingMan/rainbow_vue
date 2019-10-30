@@ -3,11 +3,17 @@ import VueRouter from 'vue-router'
 
 
 Vue.use(VueRouter)
-
+// 静态路由 不需要权限的
 const routes = [
   {
     path: '/login',
     name: 'login',
+    component: () => import('../views/login.vue'),
+    hidden: true
+  },
+  {
+    path: '/',
+    redirect: '/login',
     component: () => import('../views/login.vue'),
     hidden: true
   }, {

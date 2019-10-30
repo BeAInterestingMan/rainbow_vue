@@ -24,10 +24,11 @@ Vue.prototype.$putRequest = request.put;
 Vue.config.productionTip = false
 
 
-
+// 路由卫士 发出请求之前拦截
 router.beforeEach((to, from, next)=> {
-
+ // 得到token密匙
   let token = db.get('token')
+  // 如果token存在 则是正常登陆 否则判断是否是登陆 （登陆放行   不是登陆就去登陆）
   if(token){
     initMenu(router, store);
     next();

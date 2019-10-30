@@ -3,23 +3,23 @@
 
 <!-- 头部导航 -->
  <el-header class="home-header">
-        <span class="home_title">rainbow</span>
+        <span class="home_title">rainbow</span> <span class="home_title">太阳说雨后会有一道彩虹</span>
         <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px">
             <i class="fa fa-bell-o"  style="cursor: pointer"></i>
           </el-badge>
-          <el-dropdown >
+          <el-dropdown @command="handleCommand">
         <span class="el-dropdown-link home_userinfo" style="display: flex;align-items: center; color:#20a0ff ">
-          {{user.username}}
+          {{user.nickname}}
           <i><img v-if="user.avatar != ''" :src="user.avatar"  style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/>
-              <img v-if="user.avatar == ''" src="@/assets/logo.png"  style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/>
+              <img v-if="user.avatar == ''" src="@/assets/back.jpg"  style="width: 40px;height: 40px;margin-right: 5px;margin-left: 5px;border-radius: 40px"/>
           </i>
         
         </span>    
             <el-dropdown-menu slot="dropdown">
               <el-dropdown-item>个人中心</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
-              <el-dropdown-item  >注销</el-dropdown-item>
+              <el-dropdown-item command="logout">注销</el-dropdown-item>
             </el-dropdown-menu>
           </el-dropdown>
         </div>
@@ -81,6 +81,25 @@ return {
       },
       routes(){
         return this.$store.state.routes
+      }
+    },
+    methods:{
+       handleCommand(command){
+        var _this = this;
+        if (command == 'logout') {
+          this.$confirm('注销登录吗?', '提示', {
+            confirmButtonText: '确定',
+            cancelButtonText: '取消',
+            type: 'warning'
+          }).then(function () {
+            // 清空本地保存数据
+            localStorage.clear();
+            // _this.$getRequest("/logout")
+            _this.$router.replace({path: '/'});
+          }, function () {
+            //取消
+          })
+        }
       }
     }
 

@@ -28,6 +28,7 @@
           password: 'admin'
         },
         loading: false
+        
       }
     },
     methods: {
@@ -44,6 +45,8 @@
             this.$store.commit('login', data.user);
             this.$store.commit('setToken', data.token);
             this.$router.push('/home');   
+          }else{
+            this.$message({type: 'error', message: result.data.message});
           }
         });
       }
@@ -53,14 +56,16 @@
     }
   }
 </script>
-<style>
+<style scoped>
+
   .login-container {
     border-radius: 15px;
     background-clip: padding-box;
     margin: 180px auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
-    background: #fff;
+    /* background: #fff; */
+    /* background: url('@/assets/back'); */
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
   }
