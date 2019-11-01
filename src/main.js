@@ -16,7 +16,7 @@ Vue.use({
     Vue.prototype.$db = db
   }
 })
-// 设置全局都可以使用
+// 设置全局都可以使用 直接使用$getRequest
 Vue.prototype.$getRequest = request.get;
 Vue.prototype.$postRequest = request.post;
 Vue.prototype.$deleteRequest = request.delete;
@@ -26,19 +26,20 @@ Vue.config.productionTip = false
 
 // 路由卫士 发出请求之前拦截
 router.beforeEach((to, from, next)=> {
- // 得到token密匙
+  // 得到token密匙
   let token = db.get('token')
-  // 如果token存在 则是正常登陆 否则判断是否是登陆 （登陆放行   不是登陆就去登陆）
-  if(token){
-    initMenu(router, store);
+  if(to.name == '/login' || to.name == '/'|| to.name == '/logout'){
     next();
   }else{
-    if (to.name == '/login') {
+     // 如果token存在 则是正常登陆 否则判断是否是登陆 （登陆放行   不是登陆就去登陆）
+    if(token){
+      initMenu(router, store);
       next();
     }else{
       next('/login');
     }
   }
+ 
 
 })
 

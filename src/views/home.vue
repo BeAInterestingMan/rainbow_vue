@@ -92,10 +92,9 @@ return {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(function () {
-            // 清空本地保存数据
-            localStorage.clear();
-            // _this.$getRequest("/logout")
             _this.$router.replace({path: '/'});
+              // 清空本地保存数据
+            localStorage.clear();
           }, function () {
             //取消
           })
