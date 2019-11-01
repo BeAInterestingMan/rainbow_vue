@@ -499,7 +499,12 @@ export default {
                })
           }
           ,cancerPasswordForm(){
-                
+                this.paswordDialogVisible = false;
+                this. passWordForm = {
+                    oldPassword: "password",
+                    newPassWord:"",
+                    checkPassPassword :""
+                }
           }
     }
 }
