@@ -32,8 +32,17 @@
       <el-aside width="180px" class="home-aside">
           <div style="display: flex;justify-content: flex-start;width: 180px;text-align: left;">
             <el-menu style="background: #fff;width: 180px;" unique-opened router>
-              <template v-for="(item,index) in this.routes" v-if="!item.hidden">
-                <el-submenu :key="index" :index="index+''" >
+              <template v-for="(item,index) in this.routes">
+
+                <!-- 如果一级菜单没有子菜单  直接就是遍历 -->
+               <el-menu-item  v-if="item.children == null" :key="index" :index="item.path+''">
+                  <template slot="title">
+                    <i :class="item.iconCls" style="color: #20a0ff;width: 14px;"></i>
+                    <span slot="title">{{item.name}}</span>
+                  </template>
+                </el-menu-item>
+
+                <el-submenu  v-else :key="index" :index="index+''" >
                   <template slot="title">
                     <i :class="item.iconCls" style="color: #20a0ff;width: 14px;"></i>
                     <span slot="title">{{item.name}}</span>

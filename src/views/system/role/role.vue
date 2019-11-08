@@ -21,10 +21,10 @@
       stripe
       v-loading="tableLoading"
       style="width: 100%">
-      <el-table-column  type="selection"   align="left"  width="55"></el-table-column>
-       <el-table-column  type="index"  align="left" fixed label="序号" width="50"> </el-table-column>
+      <el-table-column  type="selection"   align="center"  width="55"></el-table-column>
+       <el-table-column  type="index"  align="center" fixed label="序号" width="50"> </el-table-column>
       <el-table-column prop="name" align="left" fixed  label="角色名"   width="100"> </el-table-column>
-      <el-table-column prop="status" align="left" fixed  label="状态"   width="80"> </el-table-column>
+      <el-table-column prop="status" align="center" fixed  label="状态"   width="80"> </el-table-column>
       <el-table-column prop="creator" align="left" fixed  label="创建人"   width="80"> </el-table-column>
       <el-table-column  prop="createTime" align="left" fixed  label="创建时间"   width="170"> </el-table-column> 
      
@@ -33,19 +33,19 @@
     <el-table-column label="操作" align="center">
         <template slot-scope="scope">
                   <el-button
-                    size="mini"  icon="el-icon-edit" type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">编辑角色
+                    size="mini"  class="el-icon-edit" type="primary"
+                    @click="handleEdit(scope.$index, scope.row)">
                   </el-button>
 
                 <el-button
-                    size="mini"  icon="el-icon-edit" type="primary"
-                    @click="handleEdit(scope.$index, scope.row)">分配资源
+                    size="mini"  class="el-icon-user-solid" type="primary"
+                    @click="handleRole(scope.$index, scope.row)">
                   </el-button>
 
                   <el-button
                     size="mini"
-                    icon="el-icon-delete" type="danger"
-                    @click="handleDelete(scope.$index, scope.row)">删除角色
+                    class="el-icon-delete" type="danger"
+                    @click="handleDelete(scope.$index, scope.row)">
                   </el-button>
                </template>
      </el-table-column>
@@ -63,24 +63,68 @@
         :total="totalCount">
     </el-pagination>
     </div> 
+
+
+  <!-- 绑定资源表单 -->
+
+      <div style="text-align: center">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="menusDialogVisible"
+          width="40%">
+ 
+       <el-tree        :props="props"
+                       :key="id"
+                       :data="treeData"
+                       :default-checked-keys="checkedKeys"
+                       node-key="id"
+                       ref="tree"
+                       show-checkbox
+                       highlight-current
+                       @check-change="handleCheckChange">
+              </el-tree>
+
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="cancelChooseMenu" >取 消</el-button>
+        <el-button size="mini" type="primary" @click="updateRoleMenu()">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+
+
+
+
 </div>
  
 </template>
 
 <script>
+import { stringify } from 'querystring';
 export default {
     data(){
 
      return{
          roleList:[],
          tableLoading: false,
+         menuFormLoading: false,
          keywords: "",
          totalCount: 0,
          currentPage: 1,
-         pageSize: 10
+         pageSize: 10,
+         menusDialogVisible: false,
+         dialogTitle: '',
+          props: {
+          label: 'name',
+          children: 'children'
+        },
+        count: 1,
+        id: "",
+        treeData:[],
+        checkedKeys:[]
      }
-     
-
+       
     }
     ,methods:{
 
@@ -106,12 +150,11 @@ export default {
          this.loadRoles();
     },
     // 编辑角色
-    handleEdit(val1,val2){
-      console.log(val1);
-        console.log(val2);
+    handleEdit(index,row){
+         
     },
     // 删除角色
-    handleDelete(){
+    handleDelete(index,row){
 
     },
     // 切换页面总条数
@@ -121,15 +164,58 @@ export default {
     },
     // 切换当前页
     handleCurrentChange(val){
-        this.currentPage = val;
+          this.currentPage = val;
           this.loadRoles();
+    }  // 分配菜单资源
+    ,handleRole(index,row){
+       this.dialogTitle = '分配资源';
+       this.menusDialogVisible = true;
+       this.id = row.id;
+       this.$getRequest('/menu/menuTreeForRole',{roleId:this.id})
+       .then(resp=>{
+         if(resp.data.status == 200){
+            this.treeData = resp.data.treeData;
+            this.checkedKeys = resp.data.menuIds;
+         }else{
+              this.$message({type: 'error', message: '加载角色菜单资源失败!'});   
+         }
+        
+       })
     }
-
+    // 更新角色菜单
+      ,updateRoleMenu(){
+        // 得到选择的资源菜单
+         var checkedKeys = this.$refs.tree.getCheckedKeys(true);
+         this.$postRequest('/menu/updateRoleMenu',{
+           menuIds: checkedKeys,
+           roleId: this.id
+         }).then(resp=>{
+           if(resp.data.status == 200){
+          
+                this.$message({type: "success", message: resp.data.message});
+                this.cancelChooseMenu();
+           }else{
+               this.$message({type: "error", message: resp.data.message});
+           }
+         })
+      }
+      ,handleCheckChange(data, checked, indeterminate) {
+     
+      },
+      // 取消选择资源菜单
+      cancelChooseMenu(){
+         this.menusDialogVisible = false;
+         this.checkedKeys =[];
+         this.treeData = [];
+      }
     }
     // 页面元素加载完成后执行
     ,mounted(){
       this.loadRoles();
     }
+
+  
+    }
    
-}
+
 </script>
