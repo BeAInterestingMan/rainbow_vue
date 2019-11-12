@@ -10,7 +10,9 @@
       </el-input>
       <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick">搜索
       </el-button>
-      
+       <el-button type="primary" icon="el-icon-refresh" size="small" style="margin-left: 3px" @click="refreshRole">刷新
+      </el-button>
+       <el-button type="primary" size="mini" icon="el-icon-plus" @click="addRole">添加角色 </el-button>
     </div>
 
     <div style="margin-top: 10px">
@@ -24,8 +26,20 @@
       <el-table-column  type="selection"   align="center"  width="55"></el-table-column>
        <el-table-column  type="index"  align="center" fixed label="序号" width="50"> </el-table-column>
       <el-table-column prop="name" align="left" fixed  label="角色名"   width="100"> </el-table-column>
-      <el-table-column prop="status" align="center" fixed  label="状态"   width="80"> </el-table-column>
-      <el-table-column prop="creator" align="left" fixed  label="创建人"   width="80"> </el-table-column>
+      <el-table-column align="center" fixed  label="状态"   width="80"> 
+        <template slot-scope="scope">
+                      <el-switch
+                        v-model="scope.row.status"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        active-value="0"
+                        inactive-value="1"
+                        >
+                      </el-switch>
+
+      </template>
+      </el-table-column>
+      <el-table-column prop="creatorName" align="left" fixed  label="创建人"   width="80"> </el-table-column>
       <el-table-column  prop="createTime" align="left" fixed  label="创建时间"   width="170"> </el-table-column> 
      
      <el-table-column prop="remark" align="left" fixed  label="备注"   width="300"> </el-table-column>
@@ -94,7 +108,47 @@
   </div>
 
 
-
+<!--  新增修改角色表单 -->
+<el-form :model="roleForm" :rules="rules" ref="addRoleForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: left">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="roleDialogVisible"
+          width="40%">
+       
+                <el-form-item label="角色名称:" prop="name">
+                  <el-input prefix-icon="el-icon-edit" v-model="roleForm.name" size="mini" style="width: 150px"
+                            placeholder="请输入角色名称"></el-input>
+                </el-form-item>
+           
+           
+                <el-form-item label="状态:" >
+               
+                      <el-switch
+                        v-model="roleForm.status"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        active-value="0"
+                        inactive-value="1"
+                        >
+                      </el-switch>
+                  
+                </el-form-item>
+        
+                <el-form-item label="备注：">
+                <el-input type="textarea" v-model="roleForm.remark" style="width: 150px:padding-left:20px"></el-input>
+                </el-form-item>
+           
+        
+        <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="resetRole">取 消</el-button>
+        <el-button size="mini" type="primary" @click="saveRole('addRoleForm')">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</el-form>
 
 </div>
  
@@ -108,7 +162,6 @@ export default {
      return{
          roleList:[],
          tableLoading: false,
-         menuFormLoading: false,
          keywords: "",
          totalCount: 0,
          currentPage: 1,
@@ -121,8 +174,26 @@ export default {
         },
         count: 1,
         id: "",
+        // 菜单tree 
         treeData:[],
-        checkedKeys:[]
+        checkedKeys:[],
+        // 角色新增表单
+        roleDialogVisible: false,
+        roleForm:{
+           id:'',
+           name:'',
+           status:'0',
+           remark: '',
+           creatorName: ''
+        }
+         ,rules: {
+          remark: [
+                { min: 1, max: 100, message: '长度在 1 到 100 个字符', trigger: 'blur' }
+                 ],
+          name: [
+                      { required: true, message: '请输入角色名称', trigger: 'change' }
+                    ],
+         }
      }
        
     }
@@ -134,8 +205,7 @@ export default {
           name: this.keywords,
           pageSize: this.pageSize,
           currentPage: this.currentPage
-       }
-         ).then(result=> {
+       }).then(result=> {
           if (result && result.status == 200) {
             this.roleList = result.data.data;
             this.totalCount = result.data.total;
@@ -143,19 +213,65 @@ export default {
             this.$message({type: 'error', message: '数据加载失败!'});
           }
         });
+         
     },
 
 //  搜索角色
     searchClick(){
          this.loadRoles();
     },
-    // 编辑角色
-    handleEdit(index,row){
-         
+    // 新增角色
+    addRole(){
+       this.roleDialogVisible = true;
     },
+     // 编辑角色
+    handleEdit(index,row){
+         this.roleDialogVisible = true;
+             this.loading = true;
+         this.$getRequest('/role/getRoleById',{id:row.id})
+          .then(resp=>{
+              this.loading = false;
+         if(resp.data.status == 200){
+            this.roleForm = resp.data.data;
+         }else{
+              this.$message({type: 'error', message: '获取角色失败!'});   
+         }
+        
+       })
+     },
     // 删除角色
     handleDelete(index,row){
-
+        this.$confirm('删除该角色, 是否继续?', '提示', {
+          confirmButtonText: '确定',
+          cancelButtonText: '取消',
+          type: 'warning'
+        }).then(() => {
+       this.loading = true;
+         this.$deleteRequest('/role/deleteRole',{id:row.id})
+         .then(resp=>{
+              this.loading = false;
+         if(resp.data.status == 200){
+           this.$message({type: "success", message: resp.data.message});
+           this.loadRoles();
+         }else{
+              this.$message({type: 'error', message: resp.data.message});   
+         }
+       })
+        }).catch(() => {
+          _this.$message({
+            type: 'info',
+            message: '已取消删除'
+          });
+        });
+    },
+    emptyRoleFormData(){
+       this.roleForm ={
+       } 
+    },
+    //刷新
+    refreshRole(){
+      this.keywords = "";
+     this.loadRoles();
     },
     // 切换页面总条数
     handleSizeChange(val){
@@ -191,7 +307,6 @@ export default {
            roleId: this.id
          }).then(resp=>{
            if(resp.data.status == 200){
-          
                 this.$message({type: "success", message: resp.data.message});
                 this.cancelChooseMenu();
            }else{
@@ -208,6 +323,32 @@ export default {
          this.checkedKeys =[];
          this.treeData = [];
       }
+      // 角色表单取消
+     ,resetRole(){
+         this.roleDialogVisible = false;
+         this.emptyRoleFormData();    
+     }
+     // 保存角色
+     ,saveRole(formName){
+           this.$refs[formName].validate((valid) => {
+             if (valid) {
+                 this.loading = true;
+                 this.$postRequest('/role/saveRole',this.roleForm) 
+                 .then(result =>{
+                  this.loading = false;
+                 if(result.data.status == 200){
+                      this.roleDialogVisible = false;
+                      this.$message({type: 'success', message: result.data.message})    
+                      this.emptyRoleFormData();
+                      this.loadRoles();              
+                  }else{
+                      this.$message({type: 'error', message: result.data.message})
+                  }
+               
+                 })
+               }
+     })
+    }
     }
     // 页面元素加载完成后执行
     ,mounted(){
