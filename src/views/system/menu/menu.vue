@@ -11,7 +11,7 @@
       </el-button>
        <el-button type="primary" icon="el-icon-refresh" size="small" style="margin-left: 3px" >刷新
       </el-button>
-       <el-button type="primary" size="mini" icon="el-icon-plus" >添加角色 </el-button>
+       <el-button type="primary" size="mini" icon="el-icon-plus" @click="openMenus">添加菜单 </el-button>
     </div>
 <!-- 左侧树 -->
         <el-container>
@@ -37,11 +37,11 @@
                         style="width: 100%">
                         <el-table-column  type="selection"   align="center"  width="55"></el-table-column>
                         <el-table-column  type="index"  align="center" fixed label="序号" width="50"> </el-table-column>
-                        <el-table-column prop = "name" align="left" fixed  label="菜单名称"   width="100"> </el-table-column>
+                        <el-table-column prop = "name" align="left" fixed  label="菜单名称"   width="80"> </el-table-column>
                         <el-table-column prop = "path" align="left" fixed  label="菜单URL"   width="100"> </el-table-column>
-                        <el-table-column prop = "component" align="left" fixed  label="前端组件"   width="100"> </el-table-column>
+                        <el-table-column prop="component"  align="left" fixed  label="前端组件"   width="100"> </el-table-column>
                          <el-table-column prop = "iconCls" align="left" fixed  label="图标"   width="100"> </el-table-column>
-                        <el-table-column align="center" fixed  label="状态"   width="80"> 
+                        <el-table-column align="center" fixed  label="状态"   width="50"> 
                             <template slot-scope="scope">
                                         <el-switch
                                             v-model="scope.row.status"
@@ -53,31 +53,29 @@
                                         </el-switch>
                           </template>
                         </el-table-column>
-                         <el-table-column prop = "type" align="left" fixed  label="类型"   width="100"> </el-table-column>
-                        <el-table-column prop="creatorName"  align="left" fixed  label="创建人"   width="80"> </el-table-column>
-                        <el-table-column  prop="createTime" align="left" fixed  label="创建时间"   width="170"> </el-table-column> 
+                         <el-table-column prop = "type" align="center" fixed  label="类型"   width="50"> </el-table-column>
+                        <el-table-column  prop="createTime" align="left" fixed  label="创建时间"   width="100"> </el-table-column> 
                         
-                        <el-table-column  prop="remark" align="left" fixed  label="备注"   width="300"> </el-table-column>
-
+    
                         <el-table-column label="操作" align="center">
-                            <!-- <template slot-scope="scope">
+                             <template slot-scope="scope">
                                     <el-button
                                         size="mini"  class="el-icon-edit" type="primary"
-                                        @click="handleEdit(scope.$index, scope.row)">
+                                       >
                                     </el-button>
 
                                     <el-button
                                         size="mini"  class="el-icon-user-solid" type="primary"
-                                        @click="handleRole(scope.$index, scope.row)">
+                                        >
                                     </el-button>
 
                                     <el-button
                                         size="mini"
                                         class="el-icon-delete" type="danger"
-                                        @click="handleDelete(scope.$index, scope.row)">
+                                       >
                                     </el-button>
-                                </template> -->
-                        </el-table-column>
+                                </template> 
+                        </el-table-column> 
                         </el-table>
                     </div>
 
@@ -87,7 +85,7 @@
                             @size-change="handleSizeChange"
                             @current-change="handleCurrentChange"
                             :current-page="currentPage"
-                            :page-sizes="[10, 20, 30]"
+                            :page-sizes="[5, 10, 15]"
                             :page-size= pageSize
                             layout="total, sizes, prev, pager, next, jumper"
                             :total="totalCount">
@@ -96,6 +94,96 @@
 
             </el-main>
         </el-container>
+
+
+
+           <!-- 添加资源表单 -->
+<el-form :model="menuForm" :rules="menuFormRules" ref="menuForm" style="margin: 0px;padding: 0px;">
+      <div style="text-align: center">
+        <el-dialog
+          :title="dialogTitle"
+          style="padding: 0px;"
+          :close-on-click-modal="false"
+          :visible.sync="menuDialogVisible"
+          width="40%">
+
+         <el-row>
+           <el-col :span="12">
+             <el-form-item label="上级菜单:" prop="parentName">
+             <el-input type="text" v-model="menuForm.parentName" autocomplete="off" disabled="disabled"  size="mini" style="width: 150px"></el-input>
+            </el-form-item>
+           </el-col>
+
+           <el-col :span="12">
+             <el-form-item label="菜单名称:" prop="name">
+             <el-input type="text" v-model="menuForm.name" autocomplete="off" placeholder="请输入菜单名称"  size="mini" style="width: 150px"></el-input>
+            </el-form-item>
+           </el-col>
+          </el-row>
+
+        <el-row>
+           <el-col :span="12">
+             <el-form-item label="url:" prop="path">
+             <el-input type="text" v-model="menuForm.path" autocomplete="off"  placeholder="请输入菜单url" size="mini" style="width: 150px"></el-input>
+            </el-form-item>
+           </el-col>
+
+           <el-col :span="12">
+             <el-form-item label="组件路径:" prop="component">
+             <el-input type="text" v-model="menuForm.component" autocomplete="off" placeholder="请输入组件路径"  size="mini" style="width: 150px"></el-input>
+            </el-form-item>
+           </el-col>
+          </el-row>
+
+           <el-row>
+           <el-col :span="12">
+             <el-form-item label="图标:" prop="iconCls">
+             <el-input type="text" v-model="menuForm.iconCls" autocomplete="off"  placeholder="请输入图标" size="mini" style="width: 150px"></el-input>
+            </el-form-item>
+           </el-col>
+
+            <el-col :span="12">
+             <el-form-item label="排序:" >
+            <el-input-number v-model="menuForm.sort" @change="handleChange" :min="1" :max="100" size="mini"></el-input-number>
+            </el-form-item>
+           </el-col>
+          </el-row>
+
+
+            <el-row>
+           <el-col :span="12" >
+             <el-form-item label="类型:" prop="type">
+            <el-select v-model="menuForm.type" placeholder="请选择" size="mini" style="width:150px">
+                <el-option value="0">菜单</el-option>
+                <el-option value="1">按钮</el-option>
+            </el-select>
+            </el-form-item>
+           </el-col>
+
+
+        <el-col :span="12">
+             <el-form-item label="状态:" >
+             <el-switch
+                        v-model="menuForm.status"
+                        active-color="#13ce66"
+                        inactive-color="#ff4949"
+                        active-value="0"
+                        inactive-value="1"
+                        >
+                      </el-switch>
+            </el-form-item>
+           </el-col>
+          </el-row>
+    
+   
+      <span slot="footer" class="dialog-footer">
+        <el-button size="mini" @click="cancelMenu">取 消</el-button>
+        <el-button size="mini" type="primary" @click="saveMenus('menuForm')">确 定</el-button>
+      </span>
+    </el-dialog>
+  </div>
+</el-form>
+
     </div>
 </template>
 
@@ -107,9 +195,9 @@
           tableLoading:"",
           keywords:"",
           menuData:[],
-         totalCount: 0,
-         currentPage: 1,
-         pageSize: 10,
+          totalCount: 0,
+          currentPage: 1,
+          pageSize: 5,
           menuProps:{
               children: 'children',
               label: 'name'
@@ -117,10 +205,27 @@
           menuTreeData:[],
           menuTableData:[],
           // 树被点击菜单的ID
-          clickNodeId:"",
           menuForm:{
-
-          }   
+             parentId:　"",
+             parentName: "",
+             type: "",
+             status: "0",
+             component:"",
+             iconCls:"",
+             path:"",
+             name:"",
+             sort:"1"
+          },
+          menuFormRules:{
+            parentName: [{ required: true, message: '请填写上级菜单', trigger: 'blur' }],
+            name: [{ required: true, message: '请填写菜单名称', trigger: 'blur' }],
+            component: [{ required: true, message: '请填写组件路径', trigger: 'blur' }],
+            path: [{ required: true, message: '请填写菜单url', trigger: 'blur' }],         
+          },
+          menusRules:[],
+          menuDialogVisible: false,
+          dialogTitle: "",
+          imageUrl: ''
       };
     },
     methods: {
@@ -129,7 +234,8 @@
       },
        handleNodeClick(data) {
         // 得到被点击的菜单ID 
-        this.clickNodeId = data.id;
+        this.menuForm.parentId = data.id;
+        this.menuForm.parentName  = data.name;
         this.loadTableMenus();
       },
       // 加载树菜单
@@ -149,7 +255,7 @@
             name: this.keywords,
             pageSize: this.pageSize,
             currentPage: this.currentPage,
-            parentId: this.clickNodeId
+            parentId: this.menuForm.parentId
             }).then(result=> {
                 if (result && result.status == 200) {
                     this.menuTableData = result.data.data;
@@ -169,7 +275,62 @@
            this.currentPage = val;
            this.loadTableMenus();
         }
-    }, 
+        // 保存菜单资源
+        ,openMenus(){
+            this.dialogTitle = '新增菜单';
+            if(this.menuForm.parentId == '' && this.menuForm.parentName == ''){
+                this.menuForm.parentId = '0';
+                this.menuForm.parentName = '根菜单';
+            }
+           this.menuDialogVisible = true;
+        }
+        // 监听计数器改变
+        ,handleChange(value) {
+         this.menuForm.sort = value;
+      },
+      // 取消点击
+      cancelMenu(){
+        this.menuDialogVisible = false;
+        this.emptyMenuData();
+      },
+      // 保存菜单
+      saveMenus(formName){
+          this.$refs[formName].validate((valid) => {
+             if (valid) {
+                 this.loading = true;
+                 this.$postRequest('/menu/saveMenu',this.menuForm) 
+                 .then(result =>{
+                  this.loading = false;
+                 if(result.data.status == 200){
+                      this.menuDialogVisible = false;
+                      this.$message({type: 'success', message: result.data.message})    
+                      this.emptyMenuData();
+                      this.loadTableMenus();    
+                  }else{
+                      this.$message({type: 'error', message: result.data.message})
+                  }
+               
+                 })
+               }
+     })
+      },
+
+
+      // 清空数据
+      emptyMenuData(){
+        this.menuForm = {
+           parentId:　"",
+             parentName: "",
+             type: "",
+             status: "0",
+             component:"",
+             iconCls:"",
+             path:"",
+             name:"",
+             sort:"1"
+        };
+      }
+    },
     mounted(){
         // loadMenus();
         this.loadTreeMenus();
@@ -178,7 +339,29 @@
   };
 </script>
 
-<style scoped>
-
+<style>
+  .avatar-uploader .el-upload {
+    border: 1px dashed #d9d9d9;
+    border-radius: 6px;
+    cursor: pointer;
+    position: relative;
+    overflow: hidden;
+  }
+  .avatar-uploader .el-upload:hover {
+    border-color: #409EFF;
+  }
+  .avatar-uploader-icon {
+    font-size: 28px;
+    color: #8c939d;
+    width: 178px;
+    height: 178px;
+    line-height: 178px;
+    text-align: center;
+  }
+  .avatar {
+    width: 178px;
+    height: 178px;
+    display: block;
+  }
 </style>
 

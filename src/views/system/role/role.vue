@@ -71,7 +71,7 @@
         @size-change="handleSizeChange"
         @current-change="handleCurrentChange"
         :current-page="currentPage"
-        :page-sizes="[10, 20, 30]"
+        :page-sizes="[5, 10, 15]"
         :page-size= pageSize
         layout="total, sizes, prev, pager, next, jumper"
         :total="totalCount">
@@ -165,7 +165,7 @@ export default {
          keywords: "",
          totalCount: 0,
          currentPage: 1,
-         pageSize: 10,
+         pageSize: 5,
          menusDialogVisible: false,
          dialogTitle: '',
           props: {
@@ -301,7 +301,7 @@ export default {
     // 更新角色菜单
       ,updateRoleMenu(){
         // 得到选择的资源菜单
-         var checkedKeys = this.$refs.tree.getCheckedKeys(true);
+         var checkedKeys = this.$refs.tree.getCheckedKeys();
          this.$postRequest('/menu/updateRoleMenu',{
            menuIds: checkedKeys,
            roleId: this.id
