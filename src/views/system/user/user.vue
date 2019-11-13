@@ -2,12 +2,13 @@
   <div >
      <div style="margin-top: 10px;display: flex;justify-content: center">
       <el-input
-        placeholder="默认展示部分用户，可以通过用户昵称搜索用户..."
+        placeholder="可以通过用户昵称搜索用户..."
         prefix-icon="el-icon-search"
         v-model="keywords" style="width: 400px" size="small">
       </el-input>
       <el-button type="primary" icon="el-icon-search" size="small" style="margin-left: 3px" @click="searchClick">搜索
       </el-button>
+      <el-button type="primary" size="mini" icon="el-icon-refresh" @click="refreshUserList">刷新 </el-button>
        <el-button type="primary" size="mini" icon="el-icon-plus" @click="showUserForm">添加用户 </el-button>
     </div>
 <!-- 先得到用户  遍历用户 得到用户的角色展示  在得到全部角色选择 -->
@@ -84,7 +85,18 @@
       </el-card>
 
   </div>
-
+  <!-- 列表分页 -->
+                     <div style="text-align: right;margin-top: 10px">
+                        <el-pagination
+                            @size-change="handleSizeChange"
+                            @current-change="handleCurrentChange"
+                            :current-page="currentPage"
+                            :page-sizes="[3, 6, 9]"
+                            :page-size= pageSize
+                            layout="total, sizes, prev, pager, next, jumper"
+                            :total="totalCount">
+                        </el-pagination>
+                    </div> 
 
 <!--  新增修改用户表单 -->
 <el-form :model="userForm" :rules="rules" ref="addUserForm" style="margin: 0px;padding: 0px;">
@@ -242,10 +254,12 @@ export default {
         cardloading: [],
         // 搜索参数
         keywords: '',
+        // 用户列表参数
         users: [],
         allRoles: [],
         roles: [],
         cpRoles: [],
+        // 用户表单参数
         userForm:{
            username:"",
            nickname:"",
@@ -264,6 +278,10 @@ export default {
           label: '女'
         }
         ],
+        // 分页参数
+        totalCount: 0,
+        currentPage: 1,
+        pageSize: 3,
         dialogTitle:"",
         // 用户表单弹窗控制参数
         dialogVisible: false,
@@ -275,6 +293,7 @@ export default {
         checkPassPassword :"",
         id:""
         },
+        // 表单自定义校验规则
         rules: {
           nickname:   [{required: true, message: '必填:用户昵称', trigger: 'blur'}],
           username:   [{required: true, message: '必填:用户名', trigger: 'blur'}],
@@ -285,9 +304,8 @@ export default {
             trigger: 'blur'
           }],
           mobile:  [{required: true, message: '必填:电话号码', trigger: 'blur'}],
-         
-
-        },passwordRules: {
+        }
+        ,passwordRules: {
            newPassWord: [{ validator: validatePass, trigger: 'blur' }],
            checkPassPassword: [{ validator: validatePass2, trigger: 'blur' }],
         }
@@ -297,13 +315,17 @@ export default {
   methods:{
     // 加载用户列表
     loadUserList(){
+      this.loading = true;
       this.$getRequest('/user/list', { 
-        nickname: this.keywords
+        nickname: this.keywords,
+        pageSize: this.pageSize,
+        currentPage: this.currentPage
         }
          ).then(result=> {
           this.loading = false;
           if (result && result.status == 200) {
             this.users = result.data.data;
+            this.totalCount = result.data.total;
           }else {
             this.$message({type: 'error', message: '数据加载失败!'});
           }
@@ -350,7 +372,6 @@ export default {
           this.$postRequest("/user/saveUserRoles", {roleIds: this.roles, userId: id}).then(resp=> {
           if (resp.data.status == 200) {
              this.$message({type: "success", message: resp.data.message});
-              // this.loadUserList();
               this.loadOneUserById(id,index)
           } else {
             this.cardloading.splice(index, 1, false)
@@ -521,11 +542,26 @@ export default {
           ,cancerPasswordForm(){
                 this.paswordDialogVisible = false;
                 this. passWordForm = {
-                    oldPassword: "password",
+                    oldPassword: "",
                     newPassWord:"",
                     checkPassPassword :""
                 }
           }
+          // 分页改变条数的大小
+        ,handleSizeChange(val){
+           this.pageSize = val;
+           this.loadUserList();
+        }
+        // 分页点击当前页
+        ,handleCurrentChange(val){
+           this.currentPage = val;
+           this.loadUserList();
+        }
+        // 刷新用户
+        ,refreshUserList(){
+          this.keywords = "";
+           this.loadUserList();
+        }
     }
 }
 </script>
