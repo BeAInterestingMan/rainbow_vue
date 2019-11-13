@@ -94,18 +94,18 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="dialogVisible"
-          width="50%">
+          width="40%">
           <el-row>
             <el-col :span="12">
                 <el-form-item label="昵称:" prop="nickname">
-                  <el-input prefix-icon="el-icon-edit" v-model="userForm.nickname" size="mini" style="width: 150px"
+                  <el-input  v-model="userForm.nickname" size="mini" style="width: 150px"
                             placeholder="请输入用户昵称"></el-input>
                 </el-form-item>
             </el-col>
            
-           <el-col :span="12">
+           <el-col :span="11" style="padding-left:10px">
                 <el-form-item label="用户名:" prop="username">
-                  <el-input prefix-icon="el-icon-edit" v-model="userForm.username" size="mini" style="width: 150px"
+                  <el-input  v-model="userForm.username" size="mini" style="width: 150px"
                             placeholder="请输入用户名"></el-input>
                 </el-form-item>
             </el-col>
@@ -115,12 +115,30 @@
   
             <el-col :span="12">
                 <el-form-item label="性别:" prop="sex">
-                  <el-radio-group v-model="userForm.sex">
-                    <el-radio label="男">男</el-radio>
-                    <el-radio style="margin-left: 15px" label="女">女</el-radio>
-                  </el-radio-group>
+                    <el-select v-model="userForm.sex" placeholder="请选择" style="width:150px;" size="mini">
+                        <el-option
+                          v-for="item in sexOptions"
+                          :key="item.value"
+                          :label="item.label"
+                          :value="item.value">
+                        </el-option>
+                    </el-select>
                 </el-form-item>
             </el-col>
+
+
+             <el-col :span="11" style="padding-left: 35px">
+                <el-form-item label="状态:" >
+                  <el-switch
+                              v-model="userForm.status"
+                              active-color="#13ce66"
+                              inactive-color="#ff4949"
+                              active-value="0"
+                              inactive-value="1"
+                              >
+                  </el-switch>
+              </el-form-item>
+           </el-col>
           </el-row>
 
         <el-row>
@@ -132,8 +150,8 @@
             </el-col>
             <el-col :span="12">
                 <el-form-item label="手机号码:" prop="mobile">
-                  <el-input prefix-icon="el-icon-phone" v-model="userForm.mobile" size="mini" style="width: 200px"
-                            placeholder="请输入手机号码"></el-input>
+                  <el-input prefix-icon="el-icon-phone" v-model="userForm.mobile" size="mini" style="width: 150px"
+                            placeholder="请输入手机号码" ></el-input>
                 </el-form-item>
             </el-col>
           </el-row>
@@ -153,33 +171,20 @@
           style="padding: 0px;"
           :close-on-click-modal="false"
           :visible.sync="paswordDialogVisible"
-          width="40%">
+          width="30%">
 
-         <el-row>
-           <el-col :span="12">
-             <el-form-item label="旧密码:" prop="oldPassword">
-             <el-input type="text" v-model="passWordForm.oldPassword" autocomplete="off"  placeholder="请输入旧密码" size="mini" style="width: 150px"></el-input>
+             <el-form-item label="旧密码:" prop="oldPassword" style="padding-left:0px">
+             <el-input type="text" v-model="passWordForm.oldPassword" autocomplete="off"  placeholder="请输入旧密码" size="mini" style="width: 150px;padding-left:15px;float:left"></el-input>
             </el-form-item>
-           </el-col>
-          </el-row>
-
-           <el-row>
-           <el-col :span="12">
+         
             <el-form-item label="新密码:" prop="newPassWord">
-            <el-input type="password" v-model="passWordForm.newPassWord" autocomplete="off" placeholder="请输入新密码"  size="mini" style="width: 150px"></el-input>
+            <el-input type="password" v-model="passWordForm.newPassWord" autocomplete="off" placeholder="请输入新密码"  size="mini" style="width: 150px;padding-left:15px;float:left"></el-input>
            </el-form-item>
-           </el-col>
-           </el-row>
-
-            <el-row>
-            <el-col :span="12">
+           
              <el-form-item label="确认密码:" prop="checkPassPassword">
-             <el-input type="password" v-model="passWordForm.checkPassPassword" autocomplete="off"  placeholder="请输入确认密码"   size="mini" style="width: 150px"></el-input>
+             <el-input type="password" v-model="passWordForm.checkPassPassword" autocomplete="off"  placeholder="请输入确认密码"   size="mini" style="width: 150px;padding-left:0px;float:left"></el-input>
              </el-form-item>
-           </el-col>
-          </el-row>
-
-
+      
       <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="cancerPasswordForm">取 消</el-button>
         <el-button size="mini" type="primary" @click="submitPasswordForm('passWordForm',passWordForm.id)">确 定</el-button>
@@ -193,11 +198,11 @@
 
 <script>
 
-import Qs from 'qs'
 export default {
    // 页面html元素加载完毕执行该方法
   mounted: function () {
       this.loading = true;
+      //加载用户列表
       this.loadUserList();
       this.cardloading = Array.apply(null, Array(20)).map(function (item, i) {
         return false;
@@ -247,16 +252,25 @@ export default {
            sex:"",
            mobile:"",
            email:"",
-           id:""
+           id:"",
+           status:"0"
         }
-        ,
+        ,sexOptions:[
+          {
+          value: '0',
+          label: '男'
+        }, {
+          value: '1',
+          label: '女'
+        }
+        ],
         dialogTitle:"",
         // 用户表单弹窗控制参数
         dialogVisible: false,
         // 修改弹窗控制参数
         paswordDialogVisible : false,
         passWordForm:{
-        oldPassword: "password",
+        oldPassword: "",
         newPassWord:"",
         checkPassPassword :"",
         id:""
@@ -283,7 +297,9 @@ export default {
   methods:{
     // 加载用户列表
     loadUserList(){
-      this.$getRequest('/user/list', { nickname: this.keywords}
+      this.$getRequest('/user/list', { 
+        nickname: this.keywords
+        }
          ).then(result=> {
           this.loading = false;
           if (result && result.status == 200) {
@@ -413,24 +429,26 @@ export default {
       },
       // 新增表单
         showUserForm(){
-              this.dialogTitle = "添加用户";
+               this.dialogTitle = "添加用户";
                 this.dialogVisible = true;
                 var _this = this;
         }
         // 取消操作
         , resetUser() {
-        this.dialogVisible = false;
-        this.emptyUserFormData();
-        this.loadUserList();
+          this.dialogVisible = false;
+          this.emptyUserFormData();
+          this.loadUserList();
       },
       // 清空数据
       emptyUserFormData(){
           this.userForm={
                     username:"",
+                    nickname:"",
                     sex:"",
                     mobile:"",
                     email:"",
-                    nickname:''
+                    id:"",
+                    status:"0"
                 }
        }
        // 保存用户
@@ -457,9 +475,11 @@ export default {
        // 修改用户弹窗
        ,updateUser(id){
             this.dialogTitle = "修改用户";
-            this.dialogVisible = true;
+            this.loading = true;
             this.$getRequest('/user/getOneUser',{id:id})
             .then(result =>{
+                this.dialogVisible = true;
+                this.loading = false;
                  if(result.data.status == 200){
                     this.userForm = result.data.data
                   }else{
@@ -480,16 +500,16 @@ export default {
                   if (valid) {
                       this.$putRequest('/user/updateUserPassword',this.passWordForm)
                         .then(result =>{
+                          this.paswordDialogVisible = false;
+                          this.passWordForm = {};
                          if(result.data.status == 200){
                              this.$message({type: 'success', message: result.data.message})
                              const currentUserId = this.$db.get('user').id;
+                             // 如果是当前用户 重新登陆
                             if(currentUserId == id){
-                                setTimeout(function(){ 
                                      this.$router.replace({path: '/'});
-                                    }, 3000);
-                                // 清空本地保存数据
+                                   // 清空本地保存数据
                                     this.$db.clear();
-                                  
                               }
                         }else{
                             this.$message({type: 'error', message: result.data.message})

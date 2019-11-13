@@ -37,21 +37,22 @@
                 <!-- 如果一级菜单没有子菜单  直接就是遍历 -->
                <el-menu-item  v-if="item.children == null" :key="index" :index="item.path+''">
                   <template slot="title">
-                    <i :class="item.iconCls" style="color: #20a0ff;width: 14px;"></i>
+                    <i :class="item.icon" style="color: #20a0ff;width: 14px;"></i>
                     <span slot="title">{{item.name}}</span>
                   </template>
                 </el-menu-item>
 
                 <el-submenu  v-else :key="index" :index="index+''" >
                   <template slot="title">
-                    <i :class="item.iconCls" style="color: #20a0ff;width: 14px;"></i>
+                    <i :class="item.icon" style="color: #20a0ff;width: 14px;"></i>
                     <span slot="title">{{item.name}}</span>
                   </template>
                   <el-menu-item width="180px"
                                 style="padding-left: 30px;padding-right:0px;margin-left: 0px;width: 170px;text-align: left"
                                 v-for="child in item.children"
                                 :index="child.path"
-                                :key="child.path">{{child.name}}
+                                :key="child.path">  <i :class="child.icon" style="color: #20a0ff;width: 14px;"></i>{{child.name}}
+                                
                   </el-menu-item>
                 </el-submenu>
               </template>

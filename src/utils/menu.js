@@ -5,7 +5,7 @@ export const initMenu = (router,store) => {
 
    let user =db.get('user')
   
-   //   否则 得到菜单
+   //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{
       if(result && result.data.status == 200){
         var fmtRoutes = formatRoutes(result.data.data);
@@ -23,7 +23,7 @@ export const initMenu = (router,store) => {
         path,
         component,
         name,
-        iconCls,
+        icon,
         children
       } = router;
      // 递归子路由
@@ -37,7 +37,7 @@ export const initMenu = (router,store) => {
             require(['../views' + component + '.vue'], resolve)
         },
         name: name,
-        iconCls: iconCls,
+        icon: icon,
         children: children
       };
       fmRoutes.push(fmRouter);

@@ -1,3 +1,0 @@
-import request from './request'
-
-

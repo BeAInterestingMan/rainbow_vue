@@ -39,8 +39,8 @@
 
       </template>
       </el-table-column>
-      <el-table-column prop="creatorName" align="left" fixed  label="创建人"   width="80"> </el-table-column>
-      <el-table-column  prop="createTime" align="left" fixed  label="创建时间"   width="170"> </el-table-column> 
+      <el-table-column prop="creatorName" align="center" fixed  label="创建人"   width="100"> </el-table-column>
+      <el-table-column  prop="createTime" align="center" fixed  label="创建时间"   width="160"> </el-table-column> 
      
      <el-table-column prop="remark" align="left" fixed  label="备注"   width="300"> </el-table-column>
 
@@ -117,15 +117,13 @@
           :close-on-click-modal="false"
           :visible.sync="roleDialogVisible"
           width="40%">
-       
-                <el-form-item label="角色名称:" prop="name">
-                  <el-input prefix-icon="el-icon-edit" v-model="roleForm.name" size="mini" style="width: 150px"
+      
+                <el-form-item label="角色名称：" prop="name">
+                  <el-input  v-model="roleForm.name" size="mini" style="width: 150px"
                             placeholder="请输入角色名称"></el-input>
                 </el-form-item>
-           
-           
-                <el-form-item label="状态:" >
-               
+
+                <el-form-item label="状态：" style="padding-left:40px">
                       <el-switch
                         v-model="roleForm.status"
                         active-color="#13ce66"
@@ -134,14 +132,13 @@
                         inactive-value="1"
                         >
                       </el-switch>
-                  
-                </el-form-item>
-        
-                <el-form-item label="备注：">
-                <el-input type="textarea" v-model="roleForm.remark" style="width: 150px:padding-left:20px"></el-input>
-                </el-form-item>
-           
-        
+                  </el-form-item>
+          
+                    <el-form-item label="备注：" style="padding-left:40px">
+                    <el-input type="textarea" v-model="roleForm.remark" style="width:350px"></el-input>
+                    </el-form-item>
+         
+
         <span slot="footer" class="dialog-footer">
         <el-button size="mini" @click="resetRole">取 消</el-button>
         <el-button size="mini" type="primary" @click="saveRole('addRoleForm')">确 定</el-button>
@@ -222,22 +219,23 @@ export default {
     },
     // 新增角色
     addRole(){
+      this.dialogTitle = '添加角色';
        this.roleDialogVisible = true;
     },
      // 编辑角色
     handleEdit(index,row){
-         this.roleDialogVisible = true;
-             this.loading = true;
+         this.dialogTitle = '编辑角色';
+         this.loading = true;
          this.$getRequest('/role/getRoleById',{id:row.id})
           .then(resp=>{
               this.loading = false;
-         if(resp.data.status == 200){
-            this.roleForm = resp.data.data;
-         }else{
-              this.$message({type: 'error', message: '获取角色失败!'});   
-         }
-        
-       })
+              this.roleDialogVisible = true;
+              if(resp.data.status == 200){
+                  this.roleForm = resp.data.data;
+              }else{
+                    this.$message({type: 'error', message: '获取角色失败!'});   
+              }
+         })
      },
     // 删除角色
     handleDelete(index,row){
@@ -246,19 +244,19 @@ export default {
           cancelButtonText: '取消',
           type: 'warning'
         }).then(() => {
-       this.loading = true;
-         this.$deleteRequest('/role/deleteRole',{id:row.id})
-         .then(resp=>{
-              this.loading = false;
-         if(resp.data.status == 200){
-           this.$message({type: "success", message: resp.data.message});
-           this.loadRoles();
-         }else{
-              this.$message({type: 'error', message: resp.data.message});   
-         }
-       })
+            this.loading = true;
+              this.$deleteRequest('/role/deleteRole',{id:row.id})
+              .then(resp=>{
+                    this.loading = false;
+              if(resp.data.status == 200){
+                this.$message({type: "success", message: resp.data.message});
+                this.loadRoles();
+              }else{
+                    this.$message({type: 'error', message: resp.data.message});   
+              }
+            })
         }).catch(() => {
-          _this.$message({
+          this.$message({
             type: 'info',
             message: '已取消删除'
           });
@@ -285,10 +283,12 @@ export default {
     }  // 分配菜单资源
     ,handleRole(index,row){
        this.dialogTitle = '分配资源';
-       this.menusDialogVisible = true;
+       this.loading = true;
        this.id = row.id;
        this.$getRequest('/menu/menuTreeForRole',{roleId:this.id})
        .then(resp=>{
+           this.menusDialogVisible = true;
+           this.loading = false;
          if(resp.data.status == 200){
             this.treeData = resp.data.treeData;
             this.checkedKeys = resp.data.menuIds;
