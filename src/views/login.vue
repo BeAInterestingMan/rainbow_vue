@@ -44,7 +44,7 @@
             // 调用 mutations
             this.$store.commit('login', data.user);
             this.$store.commit('setToken', data.token);
-            this.$router.push('/home');   
+            this.$router.push('/layout');   
           }else{
             this.$message({type: 'error', message: result.data.message});
           }

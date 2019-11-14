@@ -207,7 +207,7 @@ export default {
             this.roleList = result.data.data;
             this.totalCount = result.data.total;
           }else {
-            this.$message({type: 'error', message: '数据加载失败!'});
+            this.$message({type: 'error', message: '角色数据列表加载失败!'});
           }
         });
          

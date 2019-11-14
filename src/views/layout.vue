@@ -31,7 +31,7 @@
 <!-- 侧边菜单 -->
       <el-aside width="180px" class="home-aside">
           <div style="display: flex;justify-content: flex-start;width: 180px;text-align: left;">
-            <el-menu style="background: #fff;width: 180px;" unique-opened router default-active = '999'>
+            <el-menu style="background: #fff;width: 180px;" unique-opened router default-active ='/layout'>
               <template v-for="(item,index) in this.routes">
 
                 <!-- 如果一级菜单没有子菜单  直接就是遍历 -->
@@ -63,9 +63,10 @@
     <el-main>
       <!-- 面包屑 -->
             <el-breadcrumb separator-class="el-icon-arrow-right">
-              <el-breadcrumb-item :to="{ path: '/home' }">首页</el-breadcrumb-item>
+              <el-breadcrumb-item :to="{ path: '/layout' }">首页</el-breadcrumb-item>
               <el-breadcrumb-item v-text="this.$router.currentRoute.name"></el-breadcrumb-item>
             </el-breadcrumb>
+            <!-- <router-view></router-view> -->
             <router-view></router-view>
     </el-main>
 

@@ -8,14 +8,18 @@ export const initMenu = (router,store) => {
    //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{
       if(result && result.data.status == 200){
+        // 格式话路由
         var fmtRoutes = formatRoutes(result.data.data);
+       
         // 动态加载
         router.addRoutes(fmtRoutes);
+       
+        
         store.commit('initMenu', fmtRoutes);
       }   
    })
 }
-// 路由格式转化
+  // 路由格式转化
    export const formatRoutes = (routes)=> {
     let fmRoutes = [];
     routes.forEach(router=> {

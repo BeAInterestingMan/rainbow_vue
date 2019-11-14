@@ -16,12 +16,31 @@ const routes = [
     redirect: '/login',
     component: () => import('../views/login.vue'),
     hidden: true
-  }, {
-    path: '/home',
+  }, 
+  {
+    path: '/layout',
     name: '系统首页',
-    component: () => import('../views/home.vue'),
-    hidden: true
-  }
+    component: () => import('../views/layout.vue'),
+    // 进入layout后会默认进入首页信息
+    redirect: '/layout/info',
+    hidden: true,
+    children:[{
+      path: 'info',
+      name: '系统信息',
+      component: () => import('../views/info.vue'),
+    }]
+  },
+  // {
+  //   path: '/systemInfo',
+  //   name: '系统首页',
+  //   redirect: '/systemInfo/info',
+  //   component: () => import('../views/layout.vue'),
+  //   children:[{
+  //     path: 'info',
+  //     name: '系统信息',
+  //     component: () => import('../views/info.vue'),
+  //   }]
+  // }
 ]
 
 
