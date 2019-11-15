@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import  db from '@/utils/localstorage'
+import  db from '@/utils/localStorage'
 Vue.use(Vuex)
 
 const state = {
@@ -16,13 +16,12 @@ const mutations = {
     db.save('token',val)
     state.token=val
    },
-   login(state, user){
+   user(state, user){
     state.user = user;
     db.save('user',user)
   },
   logout(state){
-    window.localStorage.removeItem('user');
-    state.routes = [];
+    db.clear();
   },
 
   initMenu(state, menus){

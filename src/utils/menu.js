@@ -1,10 +1,12 @@
 
-import db from './localstorage'
+import db from '@/utils/localStorage'
 import request from './request'
 export const initMenu = (router,store) => {
 
    let user =db.get('user')
-  
+  // if (store.state.routes.length > 0) {
+  //   return;
+  // }
    //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{
       if(result && result.data.status == 200){

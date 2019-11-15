@@ -42,7 +42,7 @@
           if (result && result.data.status == 200) {
             var data = result.data.data;
             // 调用 mutations
-            this.$store.commit('login', data.user);
+            this.$store.commit('user', data.user);
             this.$store.commit('setToken', data.token);
             this.$router.push('/layout');   
           }else{
