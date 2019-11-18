@@ -25,6 +25,7 @@ const mutations = {
   },
 
   initMenu(state, menus){
+    db.save('userRouter',menus)
     state.routes = menus;
   },
   setExpireTime (state, val) {

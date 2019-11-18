@@ -6,7 +6,6 @@ import ElementUI from 'element-ui'
 import db from './utils/localStorage'
 import 'element-ui/lib/theme-chalk/index.css'
 import request from './utils/request'
-import { initMenu } from './utils/menu';
 //引入echarts
 import echarts from 'echarts'
 Vue.use(ElementUI)
@@ -25,27 +24,6 @@ Vue.prototype.$deleteRequest = request.delete;
 Vue.prototype.$putRequest = request.put;
 Vue.prototype.$echarts = echarts
 Vue.config.productionTip = false
-
-
-// 路由卫士 发出请求之前拦截
-router.beforeEach((to, from, next)=> {
-  // 得到token密匙
-  let token = db.get('token')
-  let user = db.get('user')
-  if(to.name == '/login' || to.name == '/'|| to.name == '/logout'){
-    next();
-  }else{
-     // 如果token存在 则是正常登陆 否则判断是否是登陆 （登陆放行   不是登陆就去登陆）
-     if (token && user) {
-      initMenu(router, store);
-      next();
-    }else{
-      next('/login');
-    }
-  }
- 
-
-})
 
 new Vue({
   router,
