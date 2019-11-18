@@ -1,9 +1,9 @@
 import axios from 'axios'
 import store from '../store'
 import {Message} from 'element-ui'
-
-
-// 统一配置
+import moment from 'moment'
+import db from './localStorage'
+// 统一配置 后台请求地址
 let rainbowAxios = axios.create({
     baseURL: 'http://127.0.0.1:8088/',
     responseType: 'json'
@@ -11,8 +11,17 @@ let rainbowAxios = axios.create({
 
 // 拦截请求
 rainbowAxios.interceptors.request.use((config) => {
+    let expireTime = db.get('expireTime')
+    let token = db.get('token')
+    let now = moment().format('YYYYMMDDHHmmss')
+    console.log(now);
+    console.log(expireTime);
+    console.log(token);
+    if (now - expireTime >= -10) {
+       console.log("登陆超时")
+      }
     // 有 token就带上
-    if (store.state.token) {
+    if (token) {
         config.headers.Authorization = store.state.token
     }
     return config

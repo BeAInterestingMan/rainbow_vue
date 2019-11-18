@@ -1,15 +1,15 @@
 let db = {
   save (key, value) {
-    sessionStorage.setItem(key, JSON.stringify(value))
+    localStorage.setItem(key, JSON.stringify(value))
   },
   get (key, defaultValue = {}) {
-    return JSON.parse(sessionStorage.getItem(key)) || defaultValue
+    return JSON.parse(localStorage.getItem(key)) || defaultValue
   },
   remove (key) {
-    sessionStorage.removeItem(key)
+    localStorage.removeItem(key)
   },
   clear () {
-    sessionStorage.clear()
+    localStorage.clear()
   }
 }
 

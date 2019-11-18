@@ -6,8 +6,8 @@ Vue.use(Vuex)
 const state = {
    token: db.get('token'),
    user: db.get('user'),
-   routes:[]
-
+   routes:db.get('routes'),
+   expireTime: db.get('expireTime')
 }
 
 
@@ -26,7 +26,11 @@ const mutations = {
 
   initMenu(state, menus){
     state.routes = menus;
-  }
+  },
+  setExpireTime (state, val) {
+    db.save('expireTime', val)
+    state.expireTime = val
+  },
 
 }
 

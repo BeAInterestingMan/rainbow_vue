@@ -44,6 +44,7 @@
             // 调用 mutations
             this.$store.commit('user', data.user);
             this.$store.commit('setToken', data.token);
+            this.$store.commit('setExpireTime', data.expireTime);
             this.$router.push('/layout');   
           }else{
             this.$message({type: 'error', message: result.data.message});
