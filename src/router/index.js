@@ -70,7 +70,7 @@ router.beforeEach((to, from, next)=> {
       }
   } else {
     console.log(44444)
-    next('/login')
+    next()
   }
 })
 

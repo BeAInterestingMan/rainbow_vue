@@ -3,6 +3,7 @@ import store from '../store'
 import {Message} from 'element-ui'
 import moment from 'moment'
 import db from './localStorage'
+import { MessageBox } from 'element-ui'
 // 统一配置 后台请求地址
 let rainbowAxios = axios.create({
     baseURL: 'http://127.0.0.1:8088/',
@@ -11,13 +12,20 @@ let rainbowAxios = axios.create({
 
 // 拦截请求
 rainbowAxios.interceptors.request.use((config) => {
+    // 当token快过期时  提示过期
     let expireTime = db.get('expireTime')
     let token = db.get('token')
     let now = moment().format('YYYYMMDDHHmmss')
     if (now - expireTime >= -10) {
-       console.log("登陆超时")
+        MessageBox.alert('很抱歉，登录已过期，请重新登录', '登录已过期',{
+        confirmButtonText: '确定',
+        callback:  ()=> {
+           db.clear();
+           location.reload()
+        }
       }
-    // 有 token就带上
+        )}
+    // 有 token就带上 
     if (token) {
         config.headers.Authorization = store.state.token
     }

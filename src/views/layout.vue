@@ -103,7 +103,15 @@ return {
             cancelButtonText: '取消',
             type: 'warning'
           }).then(function () {
+            // 清空redis
+           _this.$getRequest('/logout', {
+          }).then(result=> {
+            if (result && result.data.status == 200) {
             _this.$router.replace({path: '/'});
+            }else{
+              _this.$message({type: 'error', message: result.data.message});
+            }
+          });
               // 清空本地保存数据
             localStorage.clear();
           }, function () {
