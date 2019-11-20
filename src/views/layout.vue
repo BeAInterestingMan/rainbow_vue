@@ -3,7 +3,7 @@
 
 <!-- 头部导航 -->
  <el-header class="home-header">
-        <span class="home_title">rainbow</span> <span class="home_title">太阳说雨后会有一道彩虹</span>
+        <span class="home_title">rainbow</span> <span class="home_title">童话说雨后会有一道彩虹</span>
         <div style="display: flex;align-items: center;margin-right: 7px">
           <el-badge style="margin-right: 30px">
             <i class="fa fa-bell-o"  style="cursor: pointer"></i>

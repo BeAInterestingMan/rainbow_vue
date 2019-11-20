@@ -66,11 +66,11 @@ router.beforeEach((to, from, next)=> {
           next();
       } else {
         console.log(333333)
-        next();
+        next({...to, replace: true})
       }
   } else {
     console.log(44444)
-    next()
+    next({path: '/', query: {redirect: to.path}})
   }
 })
 
