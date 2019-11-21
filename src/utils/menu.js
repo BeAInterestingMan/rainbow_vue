@@ -30,7 +30,7 @@ export const initMenu = (router,store) => {
         children
       } = router;
      // 递归子路由
-      if (children && children instanceof Array) {
+      if (children && children instanceof Array && children.length) {
         children = formatRoutes(children);
       }
       let fmRouter = {

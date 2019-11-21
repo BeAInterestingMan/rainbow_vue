@@ -42,9 +42,6 @@ const router = new VueRouter({
 })
 const whiteList = ['/login']
 
-// console.log(token);
-// console.log(user);
-// console.log(userRouter.length);
 // 路由卫士 发出请求之前拦截
 router.beforeEach((to, from, next)=> {
   if (whiteList.indexOf(to.path) !== -1) {
@@ -60,17 +57,23 @@ router.beforeEach((to, from, next)=> {
   if (token.length && user) {
     console.log(11111)
     // 如果用户路由不存在 去后台请求  存在  直接放行（此种情况在关闭浏览器无需登陆时出现）
-      if (!userRouter.length) {
-        console.log(22222)
-          initMenu(router, store);
-          next();
-      } else {
-        console.log(333333)
-        next({...to, replace: true})
-      }
+      // if (!userRouter.length) {
+      //   console.log(22222)
+      //     initMenu(router, store);
+      //     next();
+      // } else {
+      //   if(to.name == '' || to.name == '/login'){
+
+      //   }else{
+      //     next()
+      //   }
+      //   console.log(33333)
+      // }
+        initMenu(router, store);
+        next();
   } else {
     console.log(44444)
-    next({path: '/', query: {redirect: to.path}})
+    next('/login');
   }
 })
 
