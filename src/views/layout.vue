@@ -107,7 +107,7 @@ return {
            _this.$getRequest('/logout', {
           }).then(result=> {
             if (result && result.data.status == 200) {
-            _this.$router.replace({path: '/'});
+            _this.$router.replace({path: '/login'});
             }else{
               _this.$message({type: 'error', message: result.data.message});
             }
