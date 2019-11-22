@@ -17,7 +17,7 @@
         
         </span>    
             <el-dropdown-menu slot="dropdown">
-              <el-dropdown-item>个人中心</el-dropdown-item>
+              <el-dropdown-item command="center">个人中心</el-dropdown-item>
               <el-dropdown-item>设置</el-dropdown-item>
               <el-dropdown-item command="logout">注销</el-dropdown-item>
             </el-dropdown-menu>
@@ -118,7 +118,13 @@ return {
             //取消
           })
         }
+        if (command == 'center') {
+          this.$router.replace({path: '/'});
+        }
       }
+       
+         
+     
     },mounted(){
            console.log(this.$store.state.routes)
     }

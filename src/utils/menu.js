@@ -2,11 +2,15 @@
 import db from '@/utils/localStorage'
 import request from './request'
 export const initMenu = (router,store) => {
+  // console.log(store.state.routes.length)
+  // if (store.state.routes.length > 0) {
+  //   return;
+  // }
    let user =db.get('user')
    //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{
       if(result && result.data.status == 200){
-        // 格式话路由
+        // 格式化路由
         var fmtRoutes = formatRoutes(result.data.data);
         // 动态加载
         router.addRoutes(fmtRoutes);

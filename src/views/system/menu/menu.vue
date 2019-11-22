@@ -31,7 +31,6 @@
                     <el-table
                         :data="menuTableData"
                         size="mini"
-                        border
                         stripe
                         v-loading="tableLoading"
                         style="width: 100%">
@@ -41,18 +40,12 @@
                         <el-table-column prop = "path" align="left" fixed  label="菜单URL"   width="100"> </el-table-column>
                         <el-table-column prop="component"  align="left" fixed  label="前端组件"   width="120"> </el-table-column>
                          <el-table-column prop = "icon" align="left" fixed  label="图标"   width="100"> </el-table-column>
-                        <el-table-column align="center" fixed  label="状态"   width="60"> 
-                            <template slot-scope="scope">
-                                        <el-switch
-                                            v-model="scope.row.status"
-                                            active-color="#13ce66"
-                                            inactive-color="#ff4949"
-                                            active-value="0"
-                                            inactive-value="1"
-                                            >
-                                        </el-switch>
+                       <el-table-column align="center" fixed  label="状态"   width="50"> 
+                          <template slot-scope="scope" >
+                              <span style="color:green" v-if="scope.row.status == '0'">启用</span>
+                            <span v-else style="color:red">禁用</span>
                           </template>
-                        </el-table-column>
+                      </el-table-column>
                          <el-table-column  align="center" fixed  label="类型"   width="50"> 
                             <template slot-scope="scope" >
                                <span style="color:green" v-if="scope.row.type == '0'">菜单</span>

@@ -53,10 +53,10 @@ router.beforeEach((to, from, next)=> {
  let user = db.get('user')
  // 如果token和用户存在  则说明是正常登陆  放行  否则登陆
   if (token && token.length && user) {
-       // 加载路由
-        initMenu(router, store);
-        // 放行
-        next();
+          // 加载路由
+          initMenu(router, store);
+          // 放行
+          next();
   } else {
     // 否则去到登陆页面;
     router.replace("/login")

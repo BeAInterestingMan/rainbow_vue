@@ -19,25 +19,18 @@
  <el-table
       :data="roleList"
       size="mini"
-      border
+
       stripe
       v-loading="tableLoading"
       style="width: 100%">
       <el-table-column  type="selection"   align="center"  width="55"></el-table-column>
        <el-table-column  type="index"  align="center" fixed label="序号" width="50"> </el-table-column>
       <el-table-column prop="name" align="left" fixed  label="角色名"   width="100"> </el-table-column>
-      <el-table-column align="center" fixed  label="状态"   width="80"> 
-        <template slot-scope="scope">
-                      <el-switch
-                        v-model="scope.row.status"
-                        active-color="#13ce66"
-                        inactive-color="#ff4949"
-                        active-value="0"
-                        inactive-value="1"
-                        >
-                      </el-switch>
-
-      </template>
+      <el-table-column align="center" fixed  label="状态"   width="50"> 
+                <template slot-scope="scope" >
+                    <span style="color:green" v-if="scope.row.status == '0'">启用</span>
+                  <span v-else style="color:red">禁用</span>
+                </template>
       </el-table-column>
       <el-table-column prop="creatorName" align="center" fixed  label="创建人"   width="100"> </el-table-column>
       <el-table-column  prop="createTime" align="center" fixed  label="创建时间"   width="160"> </el-table-column> 

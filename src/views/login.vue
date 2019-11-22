@@ -1,7 +1,7 @@
 <template>
   <el-form :rules="rules" class="login-container" label-position="left" :model="loginForm"
            label-width="0px" v-loading="loading">
-    <h3 class="login_title">系统登录</h3>
+    <h3 class="login_title">RAINBOW</h3>
     <el-form-item prop="username">
       <el-input type="text" v-model="loginForm.username"
                 auto-complete="off" placeholder="账号"></el-input>
@@ -57,7 +57,9 @@
     }
   }
 </script>
-<style scoped>
+<style lang="less" scoped>
+
+
 
   .login-container {
     border-radius: 15px;
@@ -65,8 +67,7 @@
     margin: 180px auto;
     width: 350px;
     padding: 35px 35px 15px 35px;
-    /* background: #fff; */
-    /* background: url('@/assets/back'); */
+    // background-image: url(F:\vue_rainbow\rainbow_vue\src\assets\back.jpg);
     border: 1px solid #eaeaea;
     box-shadow: 0 0 25px #cac6c6;
   }
