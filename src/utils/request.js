@@ -4,9 +4,10 @@ import {Message} from 'element-ui'
 import moment from 'moment'
 import db from './localStorage'
 import { MessageBox } from 'element-ui'
+import router from '../router';
 // 统一配置 后台请求地址
 let rainbowAxios = axios.create({
-    baseURL: 'http://127.0.0.1:8088/',
+    baseURL: 'http://10.1.74.45:8088/',
     responseType: 'json'
 })
 
@@ -42,7 +43,7 @@ rainbowAxios.interceptors.response.use((config) => {
         let errorMessage = error.response.data === null ? '系统内部异常，请联系网站管理员' : error.response.data.message
         switch (error.response.status) {
             case 404:
-               Message.error({message: '很抱歉，资源未找到!'});
+                Message.error({message: '很抱歉，资源未找到!'});
                 break
             case 403:
             case 401:

@@ -12,10 +12,10 @@ const routes = [
     component: () => import('../views/login.vue'),
     hidden: true
   },
+  // 默认进入系统首页
   {
     path: '/',
-    redirect: '/login',
-    component: () => import('../views/login.vue'),
+    redirect: '/layout',
     hidden: true
   }, 
   {
@@ -34,12 +34,12 @@ const routes = [
 ]
 
 
-
 const router = new VueRouter({
   mode: 'history',
   base: process.env.BASE_URL,
   routes
 })
+// 白名单
 const whiteList = ['/login']
 
 // 路由卫士 发出请求之前拦截
@@ -51,29 +51,15 @@ router.beforeEach((to, from, next)=> {
  let token = db.get('token')
    // 得到用户
  let user = db.get('user')
-   // 得到用户所属菜单
- let userRouter = db.get('userRouter')
  // 如果token和用户存在  则说明是正常登陆  放行  否则登陆
-  if (token.length && user) {
-    console.log(11111)
-    // 如果用户路由不存在 去后台请求  存在  直接放行（此种情况在关闭浏览器无需登陆时出现）
-      // if (!userRouter.length) {
-      //   console.log(22222)
-      //     initMenu(router, store);
-      //     next();
-      // } else {
-      //   if(to.name == '' || to.name == '/login'){
-
-      //   }else{
-      //     next()
-      //   }
-      //   console.log(33333)
-      // }
+  if (token && token.length && user) {
+       // 加载路由
         initMenu(router, store);
+        // 放行
         next();
   } else {
-    console.log(44444)
-    next('/login');
+    // 否则去到登陆页面;
+    router.replace("/login")
   }
 })
 

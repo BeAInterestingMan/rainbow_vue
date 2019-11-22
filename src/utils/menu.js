@@ -2,10 +2,6 @@
 import db from '@/utils/localStorage'
 import request from './request'
 export const initMenu = (router,store) => {
-
-
-
-  
    let user =db.get('user')
    //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{
