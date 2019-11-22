@@ -1,7 +1,7 @@
 # rainbow_vue
 
 ## springboot+jwt+shiro+vue搭建的前端项目
-
+### [项目后台地址](https://github.com/makePromise/rainbow_vue_java)
 ### 项目技术
 #### 应用了vue全家桶 vue-cli3.0 +vuex axios vue-router elementUi。
 
@@ -24,7 +24,7 @@
 
 
 ### 项目思路
-![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/jwt.png)
+![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/jwt.jpg)
 #### 1.首先输入用户名与密码进行登入，如果成功返回一个加密的JWT密匙（同时后台把密匙存储在redis），失败的话直接返回401错误(帐号或密码不正确)。
 #### 2.以后访问都要在请求头上带上这个JWT密匙，后台鉴权重写了Shiro的入口过滤器JWTFilter(BasicHttpAuthenticationFilter)，判断请求
 #### Header里面是否包含Authorization字段，有就进行Shiro的Token登录认证授权(判断redis是否存在toekn密匙,不存在则失效，重新登陆)，没有就无访问
