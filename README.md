@@ -10,7 +10,8 @@
 #### 1.首先安装node和vue的基本环境，自行上网百度。
 #### 2.cd 到 rainbow_vue 更目录执行命令 npm install  然后npm run serve 命令运行,下方会出现项目的地址。
 
-
+### 项目预览
+![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/index.png)
 
 ### 技术简单理解
 #### 因为我是做后台的，所以前端学习的时候会配合后台理解一下，如果不对，请见谅。
