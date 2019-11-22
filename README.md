@@ -34,4 +34,4 @@
 ![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/router2.png)
 #### 动态加载菜单: 利用递归把路由格式化，利用addRouters注册路由
 ![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/router.png)
-![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/router1.png)
+![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/router3.png)
