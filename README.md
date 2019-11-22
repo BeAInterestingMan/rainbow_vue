@@ -24,3 +24,80 @@
 
 
 ### 项目思路
+#### 1.首先输入用户名与密码进行登入，如果成功返回一个加密的JWT密匙（同时后台把密匙存储在redis），失败的话直接返回401错误(帐号或密码不正确)。
+#### 2.以后访问都要在请求头上带上这个JWT密匙，后台鉴权重写了Shiro的入口过滤器JWTFilter(BasicHttpAuthenticationFilter)，判断请求
+#### Header里面是否包含Authorization字段，有就进行Shiro的Token登录认证授权(判断redis是否存在toekn密匙,不存在则失效，重新登陆)，没有就无访问
+   
+### 动态路由和路由卫士
+#### 路由卫士：请求发出如果是白名单直接放行，否则判断token，有token则正常登陆，请求菜单放行，否则去登陆页面。
+// 白名单
+const whiteList = ['/login']
+
+// 路由卫士 发出请求之前拦截
+router.beforeEach((to, from, next)=> {
+  if (whiteList.indexOf(to.path) !== -1) {
+    next()
+  }
+  // 得到token密匙
+ let token = db.get('token')
+   // 得到用户
+ let user = db.get('user')
+ // 如果token和用户存在  则说明是正常登陆  放行  否则登陆
+  if (token && token.length && user) {
+          // 加载路由
+          initMenu(router, store);
+          // 放行
+          next();
+  } else {
+    // 否则去到登陆页面;
+    router.replace("/login")
+  }
+})
+#### 动态加载菜单: 利用递归把路由格式化，利用addRouters注册路由
+
+
+import db from '@/utils/localStorage'
+import request from './request'
+export const initMenu = (router,store) => {
+
+   let user =db.get('user')
+   //    得到菜单
+   request.get(`menu/getUserMenu/${user.username}`).then(result =>{
+      if(result && result.data.status == 200){
+        // 格式化路由
+        var fmtRoutes = formatRoutes(result.data.data);
+        // 动态加载
+        router.addRoutes(fmtRoutes);
+        store.commit('initMenu', fmtRoutes);
+      }   
+   })
+}
+  // 路由格式转化
+   export const formatRoutes = (routes)=> {
+    let fmRoutes = [];
+    routes.forEach(router=> {
+      let {
+        path,
+        component,
+        name,
+        icon,
+        children
+      } = router;
+     // 递归子路由
+      if (children && children instanceof Array && children.length) {
+        children = formatRoutes(children);
+      }
+      let fmRouter = {
+        path: path,
+        // 动态注册组件
+        component(resolve){
+            require(['../views' + component + '.vue'], resolve)
+        },
+        name: name,
+        icon: icon,
+        children: children
+      };
+      fmRoutes.push(fmRouter);
+    })
+    return fmRoutes;
+}
