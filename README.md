@@ -12,6 +12,7 @@
 
 ### 项目预览
 ![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/index.png)
+![Image text](https://github.com/makePromise/rainbow_vue/blob/master/src/assets/user.png)
 ### [更多图片](https://github.com/makePromise/rainbow_vue/tree/master/src/assets)
 
 ### 技术简单理解
