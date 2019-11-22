@@ -2,6 +2,9 @@
 
 ## springboot+jwt+shiro+vue搭建的前端项目
 ### [项目后台地址](https://github.com/makePromise/rainbow_vue_java)
+
+### 技术交流：QQ--1649471814
+
 ### 项目技术
 #### 应用了vue全家桶 vue-cli3.0 +vuex axios vue-router elementUi。
 
