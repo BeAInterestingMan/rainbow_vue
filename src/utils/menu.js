@@ -1,5 +1,5 @@
 
-import db from '@/utils/localstorage'
+import db from '@/utils/localStorage'
 import request from './request'
 export const initMenu = (router,store) => {
 
