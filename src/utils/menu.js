@@ -1,11 +1,8 @@
 
-import db from '@/utils/localStorage'
+import db from '@/utils/localstorage'
 import request from './request'
 export const initMenu = (router,store) => {
-  // console.log(store.state.routes.length)
-  // if (store.state.routes.length > 0) {
-  //   return;
-  // }
+
    let user =db.get('user')
    //    得到菜单
    request.get(`menu/getUserMenu/${user.username}`).then(result =>{

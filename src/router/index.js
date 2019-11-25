@@ -2,7 +2,7 @@ import Vue from 'vue'
 import VueRouter from 'vue-router'
 import store from '@/store'
 import { initMenu } from '../utils/menu';
-import db from '@/utils/localStorage'
+import db from '@/utils/localstorage'
 Vue.use(VueRouter)
 // 静态路由 不需要权限的
 const routes = [

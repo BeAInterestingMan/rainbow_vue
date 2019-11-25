@@ -1,6 +1,6 @@
 import Vue from 'vue'
 import Vuex from 'vuex'
-import  db from '@/utils/localStorage'
+import  db from '@/utils/localstorage'
 Vue.use(Vuex)
 
 const state = {

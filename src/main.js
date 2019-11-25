@@ -3,7 +3,7 @@ import App from './App.vue'
 import router from './router'
 import store from './store'
 import ElementUI from 'element-ui'
-import db from './utils/localStorage'
+import db from './utils/localstorage'
 import 'element-ui/lib/theme-chalk/index.css'
 import request from './utils/request'
 //引入echarts

@@ -2,7 +2,7 @@ import axios from 'axios'
 import store from '../store'
 import {Message} from 'element-ui'
 import moment from 'moment'
-import db from './localStorage'
+import db from './localstorage'
 import { MessageBox } from 'element-ui'
 import router from '../router';
 // 统一配置 后台请求地址
