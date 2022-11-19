@@ -17,7 +17,7 @@
   },
   "devDependencies": {
     "@vue/cli-plugin-babel": "^4.0.0",
-    "@vue/cli-service": "^4.0.0",
+    "@vue/cli-service": "^5.0.8",
     "css-loader": "^3.2.0",
     "echarts": "^4.4.0",
     "less": "^3.0.4",
